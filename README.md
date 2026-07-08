@@ -1,8 +1,31 @@
 # ORBIT Ajo Protocol — Contracts
 
-Soroban smart contracts implementing the ORBIT Ajo Protocol: a rotating
-savings & credit association (ROSCA) with staked collateral and
-member-voted default slashing.
+Part of the [ORBIT Ajo Protocol](https://github.com/ORBIT-Ajo-Protocol) —
+a rotating savings & credit association (ROSCA / "Ajo") built on Stellar
+Soroban with staked collateral and member-voted default slashing. See also:
+[orbit-backend](https://github.com/ORBIT-Ajo-Protocol/orbit-backend)
+(indexer + API that talks to these contracts) and
+[orbit-frontend](https://github.com/ORBIT-Ajo-Protocol/orbit-frontend) (the
+demo UI — not yet wired to either).
+
+Soroban smart contracts implementing the protocol: staked collateral,
+rotating contributions/payouts, and member-voted default slashing.
+
+## Live on testnet
+
+| Contract | Address |
+|---|---|
+| `orbit-factory` | `CA5BMLNRG6OU7U6ZVPO4MUDHG5EHAGGMV3QTGQL4NS2IW35RKITLFLZK` |
+| `orbit-contract` wasm hash | `e35ce9e15f12bf0118af9276eae307b1662327664722fbc3391819394775fb46` |
+| Sample orbit — "Lagos Solar Orbit" | `CBZGTZNEB74FDVGEHKPCEROEN6QGD5NYNG7PLYWMHHF4OD24X6CHXV7K` |
+| Sample orbit — "Abuja Galaxy Orbit" | `CAT5CLZ6QN3OBWJ6SPRHXCSXWFXJ4V2AEMWBDT3MD4YYQPLSIOYQSGVB` |
+
+Inspect any of these directly, e.g.:
+
+```sh
+stellar contract invoke --id CBZGTZNEB74FDVGEHKPCEROEN6QGD5NYNG7PLYWMHHF4OD24X6CHXV7K \
+  --source <your-identity> --network testnet -- get_state
+```
 
 ## Layout
 
