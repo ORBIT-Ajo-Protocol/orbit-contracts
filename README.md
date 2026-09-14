@@ -11,6 +11,10 @@ demo UI — not yet wired to either).
 Soroban smart contracts implementing the protocol: staked collateral,
 rotating contributions/payouts, and member-voted default slashing.
 
+For how this fits with the backend and frontend, plus a full step-by-step
+protocol workflow, see
+[orbit-frontend/ARCHITECTURE.md](https://github.com/ORBIT-Ajo-Protocol/orbit-frontend/blob/main/ARCHITECTURE.md).
+
 ## Live on testnet
 
 | Contract | Address | Explorer |
