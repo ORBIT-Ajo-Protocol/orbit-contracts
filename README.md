@@ -21,13 +21,20 @@ protocol workflow, see
 |---|---|---|
 | `orbit-factory` | `CA5BMLNRG6OU7U6ZVPO4MUDHG5EHAGGMV3QTGQL4NS2IW35RKITLFLZK` | [stellar.expert](https://stellar.expert/explorer/testnet/contract/CA5BMLNRG6OU7U6ZVPO4MUDHG5EHAGGMV3QTGQL4NS2IW35RKITLFLZK) |
 | `orbit-contract` wasm hash | `e35ce9e15f12bf0118af9276eae307b1662327664722fbc3391819394775fb46` | — |
-| Sample orbit — "Lagos Solar Orbit" | `CBZGTZNEB74FDVGEHKPCEROEN6QGD5NYNG7PLYWMHHF4OD24X6CHXV7K` | [stellar.expert](https://stellar.expert/explorer/testnet/contract/CBZGTZNEB74FDVGEHKPCEROEN6QGD5NYNG7PLYWMHHF4OD24X6CHXV7K) |
-| Sample orbit — "Abuja Galaxy Orbit" | `CAT5CLZ6QN3OBWJ6SPRHXCSXWFXJ4V2AEMWBDT3MD4YYQPLSIOYQSGVB` | [stellar.expert](https://stellar.expert/explorer/testnet/contract/CAT5CLZ6QN3OBWJ6SPRHXCSXWFXJ4V2AEMWBDT3MD4YYQPLSIOYQSGVB) |
+| Sample orbit — "Lagos Solar Orbit" | `CA6PRW7I752US45ZPASZBRNTEV4KO4YTU3NHKPCJ35JZOZHA3PQCPJNP` | [stellar.expert](https://stellar.expert/explorer/testnet/contract/CA6PRW7I752US45ZPASZBRNTEV4KO4YTU3NHKPCJ35JZOZHA3PQCPJNP) |
+| Sample orbit — "Abuja Galaxy Orbit" | `CDYWDXRZZHNOIOYI5WO2QKTRBVFRJVXJJYEBG5SFNAEKFUHYCL3ZI7EC` | [stellar.expert](https://stellar.expert/explorer/testnet/contract/CDYWDXRZZHNOIOYI5WO2QKTRBVFRJVXJJYEBG5SFNAEKFUHYCL3ZI7EC) |
+
+Both sample orbits are not just deployed — they have 5 real seated
+members, real locked stakes, and real contribution rounds run (via
+`orbit-backend/scripts/seed-live-orbit.ts`): Lagos is mid-round-2 of 5
+with a 100 XLM pot; Abuja has completed 4 of 5 rounds with a 450 XLM pot.
+`get_state`/`get_members` on either will show this real activity, not an
+empty freshly-deployed shell.
 
 Inspect any of these directly, e.g.:
 
 ```sh
-stellar contract invoke --id CBZGTZNEB74FDVGEHKPCEROEN6QGD5NYNG7PLYWMHHF4OD24X6CHXV7K \
+stellar contract invoke --id CA6PRW7I752US45ZPASZBRNTEV4KO4YTU3NHKPCJ35JZOZHA3PQCPJNP \
   --source <your-identity> --network testnet -- get_state
 ```
 
