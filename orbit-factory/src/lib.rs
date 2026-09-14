@@ -78,6 +78,10 @@ pub struct OrbitFactory;
 
 #[contractimpl]
 impl OrbitFactory {
+    /// One-time setup: sets the factory's admin (who alone may call
+    /// `set_wasm_hash`). Callable by anyone once — the caller becomes admin
+    /// by signing as the `admin` address, and `AlreadyInitialized` guards
+    /// against calling it twice.
     pub fn initialize(env: Env, admin: Address) -> Result<(), Error> {
         if env.storage().instance().has(&DataKey::Admin) {
             return Err(Error::AlreadyInitialized);
@@ -171,10 +175,14 @@ impl OrbitFactory {
         Ok(deployed_address)
     }
 
+    /// The deployed address of the orbit created with this id (the
+    /// monotonically increasing id `create_orbit` assigned it), or `None`
+    /// if no orbit with that id exists yet.
     pub fn get_orbit(env: Env, orbit_id: u32) -> Option<Address> {
         env.storage().instance().get(&DataKey::Orbit(orbit_id))
     }
 
+    /// Every orbit ever deployed by this factory, in creation order.
     pub fn get_all_orbits(env: Env) -> Vec<Address> {
         env.storage()
             .instance()
@@ -182,6 +190,8 @@ impl OrbitFactory {
             .unwrap_or(Vec::new(&env))
     }
 
+    /// How many orbits this factory has deployed (also the next id
+    /// `create_orbit` will assign).
     pub fn orbit_count(env: Env) -> u32 {
         env.storage().instance().get(&DataKey::NextId).unwrap_or(0)
     }

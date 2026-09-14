@@ -105,3 +105,13 @@ stellar contract invoke --id <factory-id> --source <your-identity> --network tes
 - `PayoutOrder::Auction`'s bid only decides who wins the round; the winner
   still receives the full pot (matching Fixed/Random's custody invariants),
   not a discounted payout with rebate redistribution to other members.
+
+## More docs
+
+- [`SECURITY.md`](./SECURITY.md) — access-control and integer-overflow
+  audit findings (one real gap found and fixed), plus the reasoning behind
+  the single-EOA-admin and immutable-contract decisions.
+- [`ERROR_CODES.md`](./ERROR_CODES.md) — every error code on both
+  contracts and the exact scenario that triggers it.
+- [`DEPLOYMENT.md`](./DEPLOYMENT.md) — what would need to happen before any
+  mainnet deployment (this protocol is testnet-only today).

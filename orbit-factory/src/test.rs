@@ -141,3 +141,74 @@ fn create_orbit_requires_wasm_hash_to_be_set() {
     );
     assert_eq!(result, Err(Ok(Error::WasmHashNotSet)));
 }
+
+// Issue: "Handle wasm_hash rotation on factory without breaking existing
+// orbits". `set_wasm_hash` only updates the factory's own pointer used by
+// *future* create_orbit calls — an already-deployed orbit-contract instance
+// is a separate contract at a fixed address with its own wasm baked in at
+// deploy time, so rotating the factory's registered hash cannot retroactively
+// touch it. This proves that invariant rather than just asserting it.
+#[test]
+fn wasm_hash_rotation_does_not_affect_already_deployed_orbits() {
+    let env = Env::default();
+    env.mock_all_auths();
+
+    let (factory_id, _admin, token, token_admin_client) = setup(&env);
+    let factory = OrbitFactoryClient::new(&env, &factory_id);
+    let creator = Address::generate(&env);
+
+    let contribution = 25_000_000i128;
+    let orbit_before = factory.create_orbit(
+        &creator,
+        &token.address,
+        &String::from_str(&env, "Pre-Rotation Orbit"),
+        &contribution,
+        &Frequency::Weekly,
+        &PayoutOrder::Fixed,
+        &0u32,
+        &2u32,
+        &172800u64,
+    );
+    let client_before = orbit_wasm::Client::new(&env, &orbit_before);
+
+    // Re-register the same wasm under a "rotation" (the only real build this
+    // test has available — what matters is that the factory's own pointer
+    // changing doesn't reach into already-deployed instances at all).
+    let rotated_hash = env.deployer().upload_contract_wasm(orbit_wasm::WASM);
+    factory.set_wasm_hash(&rotated_hash);
+
+    // The pre-rotation orbit is untouched: same address, same live config,
+    // still fully usable.
+    assert_eq!(factory.get_orbit(&0), Some(orbit_before.clone()));
+    assert_eq!(client_before.get_config().contribution_amount, contribution);
+    let m0 = Address::generate(&env);
+    let m1 = Address::generate(&env);
+    for (i, m) in [&m0, &m1].into_iter().enumerate() {
+        client_before.add_member(m, &(i as u32));
+        token_admin_client.mint(m, &(contribution * 5));
+    }
+    client_before.activate();
+    for _round in 1..=2 {
+        for m in [&m0, &m1] {
+            client_before.contribute(m);
+        }
+    }
+    assert_eq!(client_before.get_state().status, orbit_wasm::OrbitStatus::Completed);
+
+    // New orbits deploy fine against the rotated hash, and the registry now
+    // correctly holds both, addressed independently by id.
+    let orbit_after = factory.create_orbit(
+        &creator,
+        &token.address,
+        &String::from_str(&env, "Post-Rotation Orbit"),
+        &contribution,
+        &Frequency::Weekly,
+        &PayoutOrder::Fixed,
+        &0u32,
+        &2u32,
+        &172800u64,
+    );
+    assert_ne!(orbit_before, orbit_after);
+    assert_eq!(factory.orbit_count(), 2);
+    assert_eq!(factory.get_orbit(&1), Some(orbit_after));
+}

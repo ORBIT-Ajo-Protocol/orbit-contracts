@@ -452,6 +452,17 @@ impl OrbitContract {
         if state.status != OrbitStatus::Active {
             return Err(Error::NotActive);
         }
+        // `require_auth` only proves the caller controls `proposer`'s key —
+        // it does not prove `proposer` is a member of this orbit. Without
+        // this check any outsider address could open unlimited disputes
+        // against a legitimately-overdue defaulter (spam, not fund-theft,
+        // since vote_slash independently re-checks voter membership — but
+        // still a real deviation from the documented "any active member"
+        // invariant).
+        let proposer_info = read_member_info(&env, &proposer)?;
+        if proposer_info.status != MemberStatus::Active {
+            return Err(Error::VoterIneligible);
+        }
         let round = state.current_round;
         let now = env.ledger().timestamp();
         if now < state.round_start_time + config.grace_period_secs {
@@ -730,22 +741,32 @@ impl OrbitContract {
         }
     }
 
+    /// The group's immutable configuration set at `initialize` — token,
+    /// contribution amount, frequency, payout order, stake %, round count.
     pub fn get_config(env: Env) -> Config {
         read_config(&env)
     }
 
+    /// The group's current mutable state: status, round number, live pot
+    /// balance, and the most recent payout.
     pub fn get_state(env: Env) -> State {
         read_state(&env)
     }
 
+    /// All seated members, in join order (not payout order — see
+    /// `MemberInfo.rotation_index` for `PayoutOrder::Fixed`'s order).
     pub fn get_members(env: Env) -> Vec<Address> {
         read_members(&env)
     }
 
+    /// A member's stake, status, and payout history. `None` if `member` was
+    /// never seated via `add_member`.
     pub fn get_member_info(env: Env, member: Address) -> Option<MemberInfo> {
         read_member_info(&env, &member).ok()
     }
 
+    /// Whether `member` has already contributed for `round` (used by
+    /// `maybe_settle_round` and to guard against double contribution).
     pub fn has_contributed(env: Env, round: u32, member: Address) -> bool {
         env.storage()
             .persistent()
@@ -753,6 +774,9 @@ impl OrbitContract {
             .unwrap_or(false)
     }
 
+    /// A dispute's full record — round, defaulter, vote tally, and
+    /// resolution outcome once settled. `None` if `dispute_id` was never
+    /// opened via `propose_dispute`.
     pub fn get_dispute(env: Env, dispute_id: u32) -> Option<Dispute> {
         env.storage().persistent().get(&DataKey::Dispute(dispute_id))
     }
