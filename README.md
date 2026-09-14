@@ -13,12 +13,12 @@ rotating contributions/payouts, and member-voted default slashing.
 
 ## Live on testnet
 
-| Contract | Address |
-|---|---|
-| `orbit-factory` | `CA5BMLNRG6OU7U6ZVPO4MUDHG5EHAGGMV3QTGQL4NS2IW35RKITLFLZK` |
-| `orbit-contract` wasm hash | `e35ce9e15f12bf0118af9276eae307b1662327664722fbc3391819394775fb46` |
-| Sample orbit — "Lagos Solar Orbit" | `CBZGTZNEB74FDVGEHKPCEROEN6QGD5NYNG7PLYWMHHF4OD24X6CHXV7K` |
-| Sample orbit — "Abuja Galaxy Orbit" | `CAT5CLZ6QN3OBWJ6SPRHXCSXWFXJ4V2AEMWBDT3MD4YYQPLSIOYQSGVB` |
+| Contract | Address | Explorer |
+|---|---|---|
+| `orbit-factory` | `CA5BMLNRG6OU7U6ZVPO4MUDHG5EHAGGMV3QTGQL4NS2IW35RKITLFLZK` | [stellar.expert](https://stellar.expert/explorer/testnet/contract/CA5BMLNRG6OU7U6ZVPO4MUDHG5EHAGGMV3QTGQL4NS2IW35RKITLFLZK) |
+| `orbit-contract` wasm hash | `e35ce9e15f12bf0118af9276eae307b1662327664722fbc3391819394775fb46` | — |
+| Sample orbit — "Lagos Solar Orbit" | `CBZGTZNEB74FDVGEHKPCEROEN6QGD5NYNG7PLYWMHHF4OD24X6CHXV7K` | [stellar.expert](https://stellar.expert/explorer/testnet/contract/CBZGTZNEB74FDVGEHKPCEROEN6QGD5NYNG7PLYWMHHF4OD24X6CHXV7K) |
+| Sample orbit — "Abuja Galaxy Orbit" | `CAT5CLZ6QN3OBWJ6SPRHXCSXWFXJ4V2AEMWBDT3MD4YYQPLSIOYQSGVB` | [stellar.expert](https://stellar.expert/explorer/testnet/contract/CAT5CLZ6QN3OBWJ6SPRHXCSXWFXJ4V2AEMWBDT3MD4YYQPLSIOYQSGVB) |
 
 Inspect any of these directly, e.g.:
 
